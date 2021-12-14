@@ -16,9 +16,10 @@ function App() {
       <p>
         <Pagination
           total={100}
-          current={5}
+          current={page}
           onChange={(page: number) => {
             setPage(page);
+            console.log(page)
           }}
         />
       </p>
