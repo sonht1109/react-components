@@ -5,6 +5,7 @@ import Pagination from "components/Pagination";
 import Radio from "components/Radio";
 import DatePicker from "components/DatePicker";
 import Skeleton from "components/Skeleton";
+import CountDown from "components/CountDown";
 
 function App() {
   const [state, setState] = useState(false);
@@ -33,11 +34,25 @@ function App() {
         <DatePicker />
       </p>
       <p style={{ display: "flex" }}>
-        <Skeleton style={{ borderRadius: "50%", width: 40, height: 40, marginRight: 10 }} />
+        <Skeleton
+          style={{
+            borderRadius: "50%",
+            width: 40,
+            height: 40,
+            marginRight: 10,
+          }}
+        />
         <div>
           <Skeleton />
           <Skeleton style={{ height: 40 }} />
+          <Skeleton hideAnimation={true} style={{ height: 50 }} />
         </div>
+      </p>
+      <p>
+        <CountDown
+          then={new Date(new Date(new Date().getTime() + 60000))}
+          renderCompletionist={() => <p>FINISH !!!</p>}
+        />
       </p>
     </div>
   );

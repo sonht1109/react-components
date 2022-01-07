@@ -20,7 +20,7 @@ const Skeleton = styled.div<Props>`
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  margin: 4px 0;
+  margin: 4px;
   ${({ hideAnimation }) =>
     !hideAnimation &&
     css`
