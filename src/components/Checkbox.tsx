@@ -10,7 +10,7 @@ interface Props {
 export default function Checkbox({ checked, onChange }: Props) {
   return (
     <SCheckbox onClick={onChange} checked={checked}>
-      <FaCheck color="white" size={8} style={{ minWidth: "8px" }} />
+      <FaCheck color={checked ? 'white' : 'transparent'} size={8} style={{ minWidth: "8px" }} />
     </SCheckbox>
   );
 }
@@ -29,4 +29,16 @@ export const SCheckbox = styled.div<{ checked: boolean }>`
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+  cursor: pointer;
+  &:hover {
+    svg {
+      path {
+        fill: ${({ checked }) => (checked ? "inherit" : "#A6B0CF")};
+      }
+    }
+  }
+  transform: scale(1);
+  &:focus {
+    display: none;
+  }
 `;
