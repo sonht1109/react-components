@@ -4,6 +4,7 @@ import Checkbox from "components/Checkbox";
 import Pagination from "components/Pagination";
 import Radio from "components/Radio";
 import DatePicker from "components/DatePicker";
+import Skeleton from "components/Skeleton";
 
 function App() {
   const [state, setState] = useState(false);
@@ -30,6 +31,13 @@ function App() {
       </p>
       <p>
         <DatePicker />
+      </p>
+      <p style={{ display: "flex" }}>
+        <Skeleton style={{ borderRadius: "50%", width: 40, height: 40, marginRight: 10 }} />
+        <div>
+          <Skeleton />
+          <Skeleton style={{ height: 40 }} />
+        </div>
       </p>
     </div>
   );
