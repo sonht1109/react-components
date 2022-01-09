@@ -43,7 +43,6 @@ export const SPickerShow = styled.div`
 `;
 
 export const SPickerCell = styled.button`
-  border-radius: 2px;
   text-align: center;
   background-color: white;
   padding: 0;
@@ -57,14 +56,15 @@ export const SPickerCell = styled.button`
     width: 24px;
     height: 24px;
     line-height: 24px;
+    border-radius: 2px;
+    &.disabled {
+      color: #d9d9d9;
+      cursor: not-allowed;
+    }
   }
 `;
 
-export const SPickerDayInWeek = styled(SPickerCell)`
-  & > span {
-    font-weight: 600;
-  }
-`;
+export const SPickerDayInWeek = styled(SPickerCell)``;
 
 export const SPickerDateInMonth = styled(SPickerCell)`
   cursor: pointer;
@@ -75,7 +75,10 @@ export const SPickerDateInMonth = styled(SPickerCell)`
   }
   &.active {
     color: white;
-    background-color: #1890ff;
+    span {
+      background-color: #1890ff;
+      border-color: #1890ff;
+    }
   }
 `;
 

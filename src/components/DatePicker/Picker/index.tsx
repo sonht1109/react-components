@@ -8,7 +8,7 @@ import {
 } from "../styles";
 import { PickerProps } from "../types";
 import PickerControl from "./PickerControl";
-import { EWeekDay } from "../types";
+import { daysInWeek } from "../constants";
 import classNames from "classnames";
 
 interface InternalPickerProps extends Partial<PickerProps> {
@@ -32,7 +32,6 @@ export default function Picker({
   const y = previewDate?.getFullYear();
   const d = previewDate?.getDate();
   const calendar = _calendar(m + 1, y);
-  const daysInWeek = Object.keys(EWeekDay);
 
   const onSelectDate = (val: number) => {
     onPickerChange(new Date(y, m, val));
@@ -60,7 +59,7 @@ export default function Picker({
       <div className="divider"></div>
       <SPickerShow>
         {Children.toArray(
-          daysInWeek.map((val) => <PickerDayInWeek {...{ val }} />)
+          Object.values(daysInWeek).map((val) => <PickerDayInWeek {...{ val }} />)
         )}
         {Children.toArray(
           calendar.map((val) =>

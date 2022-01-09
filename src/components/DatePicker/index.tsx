@@ -47,7 +47,6 @@ export default function DatePicker(props: InternalDatePickerProps) {
         onFocus={() => {
           togglePicker(true);
         }}
-        // onBlur={() => togglePicker(false)},
       />
       {isPickerOpen && <Picker {...{ date }} onPickerChange={onPickerChange} />}
     </SDatePicker>
