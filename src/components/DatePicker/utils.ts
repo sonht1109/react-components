@@ -1,4 +1,4 @@
-import { DATE_PICKER_COL, DATE_PICKER_ROW } from "./constants";
+import { DATE_PICKER_COL, DATE_PICKER_ROW, MONTH_PICKER_COL, MONTH_PICKER_ROW } from "./constants";
 
 const isLeap = (year: number) => {
   if (year % 4 || (year % 100 === 0 && year % 400)) return 0;
@@ -20,8 +20,31 @@ export const _calendar = (month: number, year: number) => {
   return res;
 };
 
-export const formatOptions = {
-  year: "numeric",
+export const formatOptions: Intl.DateTimeFormatOptions = {
+  day: "2-digit",
   month: "2-digit",
-  day: "2-digit"
-};
+  year: "numeric",
+}
+
+export const generateYearOptions = (
+  start = new Date().getFullYear() - 15,
+  end = new Date().getFullYear() + 15,
+  step = 1
+) => {
+  const res = [];
+  for (let i = start; i <= end; i += step) {
+    res.push(i);
+  }
+  return res.reverse();
+}
+
+export const generateYearPicker = (currentYear: number, step = 1) => {
+  const res = [];
+  const total = MONTH_PICKER_COL * MONTH_PICKER_ROW
+  const startYear = Math.trunc(currentYear / total) * total + 1;
+  const endYear = startYear + total - 1;
+  for (let i = startYear; i <= endYear; i += step) {
+    res.push(i);
+  }
+  return res;
+}

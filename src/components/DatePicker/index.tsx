@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { INPUT_PATTERN } from "./constants";
+import Input from "./Input";
 import Picker from "./Picker";
 import { SDatePicker } from "./styles";
 import { DatePickerProps } from "./types";
@@ -8,7 +8,15 @@ import { formatOptions } from "./utils";
 interface InternalDatePickerProps extends Partial<DatePickerProps> {}
 
 export default function DatePicker(props: InternalDatePickerProps) {
-  const { onChange, value = undefined } = props;
+  const {
+    onChange,
+    value = undefined,
+    format = "dd/mm/yyyy",
+    inputProps,
+    pickerProps,
+    disabledDays,
+    disabledRange
+  } = props;
 
   const [isPickerOpen, togglePicker] = useState<boolean>(false);
   const [date, setDate] = useState<Date | undefined>(value);
@@ -19,36 +27,40 @@ export default function DatePicker(props: InternalDatePickerProps) {
     togglePicker(false);
   };
 
-  const onInputChange = (e: any) => {
-    const val: string = e.target.value;
-    if (INPUT_PATTERN.test(val)) {
-      const splits = val.split("/");
-      setDate(
-        new Date(Number(splits[2]), Number(splits[1]) - 1, Number(splits[0]))
-      );
-    }
+  const onInputFocus = () => {
+    togglePicker(true);
+  };
+
+  const onInputTest = (val: string) => {
+    const splits = val.split("/");
+    const tmp = new Date(
+      Number(splits[2]),
+      Number(splits[1]) - 1,
+      Number(splits[0])
+    );
+    setDate(tmp);
   };
 
   return (
     <SDatePicker className="datepicker">
-      <input
-        className="datepicker__input"
+      <Input
+        inputProps={inputProps}
+        onFocus={onInputFocus}
+        format={format}
         defaultValue={
-          date
-            ? date.toLocaleDateString("vi", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })
+          typeof date === "object"
+            ? date.toLocaleDateString("vi", { ...formatOptions })
             : ""
         }
-        onChange={onInputChange}
-        placeholder="dd/mm/yyyy"
-        onFocus={() => {
-          togglePicker(true);
-        }}
+        onTest={onInputTest}
       />
-      {isPickerOpen && <Picker {...{ date }} onPickerChange={onPickerChange} />}
+      {isPickerOpen && (
+        <Picker
+          {...{ date, disabledDays, disabledRange }}
+          {...pickerProps}
+          onPickerChange={onPickerChange}
+        />
+      )}
     </SDatePicker>
   );
 }

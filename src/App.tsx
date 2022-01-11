@@ -31,7 +31,20 @@ function App() {
         />
       </p>
       <p>
-        <DatePicker />
+        <DatePicker
+          pickerProps={{
+            showTodayButton: true,
+          }}
+          disabledDays={[
+            new Date(2022, 0, 1),
+            new Date(2022, 2, 1),
+            new Date(2022, 0, 12),
+          ]}
+          disabledRange={{
+            after: new Date(2022, 2, 15),
+            before: new Date(2021, 10, 15),
+          }}
+        />
       </p>
       <p style={{ display: "flex" }}>
         <Skeleton
