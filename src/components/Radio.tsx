@@ -4,17 +4,17 @@ import styled from "styled-components";
 interface Props {
   checked?: boolean;
   onChange?: () => void;
-  text?: string;
+  label?: string;
 }
 
-export default function Radio({ checked = false, onChange, text = "" }: Props) {
+export default function Radio({ checked = false, onChange, label = "" }: Props) {
   return (
     <SRadio
       className={`${checked ? "checked" : ""}`}
       {...{ onClick: onChange }}
     >
       <div className="radio"></div>
-      <span className="label">{text}</span>
+      <span className="label">{label}</span>
     </SRadio>
   );
 }
@@ -53,9 +53,6 @@ export const SRadio = styled.div`
     .radio {
       border-color: #9ab1cc;
     }
-    .label {
-      color: #718098;
-    }
   }
   &:not(.checked) {
     &:hover {
@@ -73,10 +70,6 @@ export const SRadio = styled.div`
         transform: scale(1);
         background-color: #00cb82;
       }
-    }
-    .label {
-      color: #333b6a;
-      font-weight: 500;
     }
   }
   .label {

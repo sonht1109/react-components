@@ -5,26 +5,18 @@ import {
   MIN_TO_MILISEC,
   SEC_TO_MILISEC,
 } from "./constants";
-import { SCountDown } from "./styles";
-import {
-  CountdownImperativeHandle,
-  ETimerElemen,
-  Props,
-  StateTimer,
-} from "./types";
-import { padTimerElemen } from "./utils";
+import { CountdownImperativeHandle, Props, StateTimer } from "./types";
+import { padTimer } from "./utils";
 
 const CountDown = React.forwardRef<CountdownImperativeHandle, Props>(
   (props, ref) => {
     const {
       then,
-      hideHour = false,
-      hideMin = false,
-      hideSec = false,
-      hideDay = false,
       loading,
       onFinish,
       renderCompletionist,
+      renderer,
+      padNumber = 2,
     } = props;
 
     const refInterval = useRef<any>(null);
@@ -70,47 +62,26 @@ const CountDown = React.forwardRef<CountdownImperativeHandle, Props>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (renderCompletionist) {
-      if (timer.s === 0) {
+    if (timer.s === 0) {
+      if (renderCompletionist) {
         return renderCompletionist();
       }
     }
 
-    if (loading && timer.s === null) {
-      return loading;
+    if (timer.s === null) {
+      if (loading) {
+        return loading;
+      }
+      return null;
     }
 
-    return (
-      <SCountDown>
-        <RenderTimerElemen type={ETimerElemen.D} val={timer.d} hide={hideDay} />
-        <RenderTimerElemen
-          type={ETimerElemen.H}
-          val={timer.h}
-          hide={hideHour}
-        />
-        <RenderTimerElemen type={ETimerElemen.M} val={timer.m} hide={hideMin} />
-        <RenderTimerElemen type={ETimerElemen.S} val={timer.s} hide={hideSec} />
-      </SCountDown>
-    );
+    return renderer({
+      day: padTimer(timer.d, padNumber),
+      hour: padTimer(timer.h, padNumber),
+      min: padTimer(timer.m, padNumber),
+      sec: padTimer(timer.s, padNumber),
+    });
   }
 );
-
-const RenderTimerElemen = ({
-  val,
-  hide,
-  type,
-}: {
-  val: number | null;
-  hide: boolean;
-  type: ETimerElemen;
-}) => {
-  return !hide && val !== null ? (
-    <span>
-      {type === ETimerElemen.D
-        ? `${val} ${val > 1 ? "days " : "day "}`
-        : padTimerElemen(val, type !== ETimerElemen.S)}
-    </span>
-  ) : null;
-};
 
 export default CountDown;

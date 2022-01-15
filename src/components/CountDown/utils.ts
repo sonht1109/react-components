@@ -1,3 +1,2 @@
-export const padTimerElemen = (val: number, showDivider = true) => {
-  return val.toString().padStart(2, "0") + (showDivider ? ":" : "");
-};
+export const padTimer = (val: number | null, padNumber: number) =>
+  (val || 0).toString().padStart(padNumber, "0");

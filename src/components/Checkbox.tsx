@@ -5,10 +5,10 @@ import styled from "styled-components";
 interface Props {
   checked: boolean;
   onChange?: () => void;
-  text?: string;
+  label?: string;
 }
 
-export default function Checkbox({ checked, onChange, text = "" }: Props) {
+export default function Checkbox({ checked, onChange, label = "" }: Props) {
   return (
     <SCheckbox onClick={onChange} checked={checked}>
       <div className="checkbox">
@@ -18,7 +18,7 @@ export default function Checkbox({ checked, onChange, text = "" }: Props) {
           style={{ minWidth: "8px" }}
         />
       </div>
-      {text && <span className="label">{text}</span>}
+      {label && <span className="label">{label}</span>}
     </SCheckbox>
   );
 }
@@ -46,7 +46,7 @@ export const SCheckbox = styled.div<{ checked: boolean }>`
   }
 
   .label {
-    margin-left: 4px;
+    margin-left: 8px;
   }
 
   &:hover {

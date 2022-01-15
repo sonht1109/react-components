@@ -4,11 +4,19 @@ export interface Props {
   then: Date;
   onFinish?: () => void;
   renderCompletionist?: () => any;
-  hideHour?: boolean;
-  hideMin?: boolean;
-  hideSec?: boolean;
-  hideDay?: boolean;
+  renderer: ({
+    day,
+    hour,
+    min,
+    sec,
+  }: {
+    day: string;
+    hour: string;
+    min: string;
+    sec: string;
+  }) => ReactNode;
   loading?: ReactNode;
+  padNumber?: number;
 }
 
 export interface CountdownImperativeHandle {}

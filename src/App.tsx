@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./App.css";
 import Checkbox from "components/Checkbox";
 import Pagination from "components/Pagination";
 import Radio from "components/Radio";
@@ -18,10 +17,18 @@ function App() {
   return (
     <div className="App">
       <p>
-        <Checkbox text="Checkbox" checked={state} onChange={() => setState((prev) => !prev)} />
+        <Checkbox
+          label="Checkbox"
+          checked={state}
+          onChange={() => setState((prev) => !prev)}
+        />
       </p>
       <p>
-        <Radio text="Radio" checked={state} onChange={() => setState((prev) => !prev)} />
+        <Radio
+          label="Radio"
+          checked={state}
+          onChange={() => setState((prev) => !prev)}
+        />
       </p>
       <p>
         <Pagination
@@ -69,6 +76,11 @@ function App() {
           loading={<p>Loading countdown ...</p>}
           then={new Date(new Date(new Date().getTime() + 60000))}
           renderCompletionist={() => <p>FINISH !!!</p>}
+          renderer={({ day, hour, min, sec }) => (
+            <div>
+              {day} days {hour}:{min}:{sec}
+            </div>
+          )}
         />
       </p>
       <p>
