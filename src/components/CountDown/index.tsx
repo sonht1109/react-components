@@ -22,6 +22,7 @@ const CountDown = React.forwardRef<CountdownImperativeHandle, Props>(
       hideMin = false,
       hideSec = false,
       hideDay = false,
+      loading,
       onFinish,
       renderCompletionist,
     } = props;
@@ -73,6 +74,10 @@ const CountDown = React.forwardRef<CountdownImperativeHandle, Props>(
       if (timer.s === 0) {
         return renderCompletionist();
       }
+    }
+
+    if (loading && timer.s === null) {
+      return loading;
     }
 
     return (

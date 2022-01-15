@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface Props {
   then: Date;
   onFinish?: () => void;
@@ -6,6 +8,7 @@ export interface Props {
   hideMin?: boolean;
   hideSec?: boolean;
   hideDay?: boolean;
+  loading?: ReactNode;
 }
 
 export interface CountdownImperativeHandle {}
