@@ -18,10 +18,10 @@ function App() {
   return (
     <div className="App">
       <p>
-        <Checkbox checked={state} onChange={() => setState((prev) => !prev)} />
+        <Checkbox text="Checkbox" checked={state} onChange={() => setState((prev) => !prev)} />
       </p>
       <p>
-        <Radio checked={state} onChange={() => setState((prev) => !prev)} />
+        <Radio text="Radio" checked={state} onChange={() => setState((prev) => !prev)} />
       </p>
       <p>
         <Pagination
