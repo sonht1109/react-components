@@ -51,11 +51,7 @@ export const SCheckbox = styled.div<{ checked: boolean }>`
 
   &:hover {
     .checkbox {
-      svg {
-        path {
-          fill: ${({ checked }) => (checked ? "inherit" : "#A6B0CF")};
-        }
-      }
+      border-color: #00CB82;
     }
   }
 `;

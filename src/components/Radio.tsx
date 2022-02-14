@@ -27,9 +27,9 @@ export const SRadio = styled.div`
   width: fit-content;
 
   .radio {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
     border-radius: 8px;
     background-color: white;
     border: 1px solid;
@@ -38,8 +38,8 @@ export const SRadio = styled.div`
     &:after {
       content: "";
       position: absolute;
-      top: 3px;
-      left: 3px;
+      top: 2px;
+      left: 2px;
       width: 10px;
       height: 10px;
       min-width: 5px;
@@ -57,9 +57,7 @@ export const SRadio = styled.div`
   &:not(.checked) {
     &:hover {
       .radio {
-        &:after {
-          transform: scale(0.75);
-        }
+        border-color: #00cb82;
       }
     }
   }

@@ -5,4 +5,5 @@
 #### - Skeleton Loading
 #### - Countdown
 #### - Collapse
+#### - Modal
 <img src="https://github.com/sonht1109/react-components/blob/master/src/assets/images/preview.jpg" width="100%"/>

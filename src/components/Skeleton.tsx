@@ -6,9 +6,9 @@ interface Props {
 
 const skeletonAnimation = keyframes`
   0% {
-    transform: translateX(-200px);
+    transform: translateX(-300px);
   }
-  90%, 100% {
+  100% {
     transform: translateX(800px);
   }
 `;
@@ -40,7 +40,7 @@ const Skeleton = styled.div<Props>`
           rgba(0, 0, 0, 0.03) 60%,
           transparent
         );
-        animation: ${skeletonAnimation} 3s infinite linear;
+        animation: ${skeletonAnimation} 2s infinite linear;
       }
     `}
 `;

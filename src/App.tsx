@@ -6,6 +6,8 @@ import DatePicker from "components/DatePicker";
 import Skeleton from "components/Skeleton";
 import CountDown from "components/CountDown";
 import Collapse from "components/Collapse";
+import Modal from "components/Modal";
+import useModal from "components/Modal/useModal";
 
 function App() {
   const [state, setState] = useState(false);
@@ -13,6 +15,8 @@ function App() {
   const [page, setPage] = useState(1);
 
   const [isCollapseOpen, toggleCollapse] = useState(false);
+
+  const { isOpen, toggleModal } = useModal();
 
   return (
     <div className="App">
@@ -107,6 +111,27 @@ function App() {
             esse reprehenderit.
           </div>
         </Collapse>
+      </p>
+      <p>
+        <button onClick={toggleModal}>Toggle Modal</button>
+        <Modal {...{ isOpen, toggleModal }} title="Modal">
+          <span>
+            Ad cillum cupidatat ullamco cillum non esse esse dolore deserunt
+            cupidatat commodo aliqua in commodo. Ad nisi qui ipsum cupidatat
+            reprehenderit nostrud incididunt ut adipisicing. Esse laboris sint
+            ut cupidatat officia eiusmod do est quis irure sit minim ut. Sint
+            exercitation minim sit incididunt Lorem sit Lorem deserunt in duis
+            est esse consequat consequat. Dolor laboris officia eu pariatur qui
+            consequat aliqua ipsum consectetur amet. Minim ullamco incididunt
+            commodo do est labore ullamco excepteur ut pariatur proident nulla
+            ullamco anim. Cillum occaecat aliqua non reprehenderit non ut
+            exercitation elit eu. Esse minim incididunt est sunt proident
+            deserunt voluptate nostrud deserunt. Do cupidatat sint esse ullamco
+            labore. Excepteur enim minim do fugiat ea. Sit amet eiusmod nostrud
+            labore mollit culpa. Excepteur laboris consequat minim nisi magna et
+            adipisicing.
+          </span>
+        </Modal>
       </p>
     </div>
   );
