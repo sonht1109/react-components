@@ -8,6 +8,7 @@ import CountDown from "components/CountDown";
 import Collapse from "components/Collapse";
 import Modal from "components/Modal";
 import useModal from "components/Modal/useModal";
+import InfiniteScroll from "components/InfiniteScroll";
 
 function App() {
   const [state, setState] = useState(false);
@@ -132,6 +133,9 @@ function App() {
             adipisicing.
           </span>
         </Modal>
+      </p>
+      <p>
+        <InfiniteScroll />
       </p>
     </div>
   );
