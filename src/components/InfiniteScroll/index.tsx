@@ -1,82 +1,61 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import React, { useCallback, useRef } from "react";
+import styled, { css } from "styled-components";
+import { InfiniteScrollProps } from "./types";
 
-export default function InfiniteScroll() {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any>([]);
+export default function InfiniteScroll(props: InfiniteScrollProps) {
+  const {
+    fetchMore,
+    hasMore,
+    renderChildren,
+    isReverse = false,
+    containerStyle = {},
+    scrollableStyle = {},
+    loader,
+  } = props;
 
   const observer = useRef<any>();
 
-  const getData = useCallback(() => {
-    setLoading(true);
-    fetch("https://dog.ceo/api/breeds/image/random/15")
-      .then((res) => {
-        return !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json();
-      })
-      .then((res) => {
-        setData((prev: any[]) => [...prev, ...res?.message]);
-      })
-      .catch((err) => {
-        console.error("ERR_IN_FETCHING", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  const refLastItem = useCallback(
+  const refObserver = useCallback(
     (node) => {
-      if (loading) return;
       if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          getData();
-        }
-      });
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasMore) {
+            fetchMore();
+          }
+        },
+        { threshold: 0 }
+      );
       if (node) observer.current.observe(node);
     },
-    [loading, getData]
+    [fetchMore, hasMore]
   );
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
 
   return (
-    <SContainer>
-      <div className="container">
-        {React.Children.toArray(
-          data.map((d: string, i: number) => (
-            <div
-              className="item"
-              ref={i + 1 === data.length ? refLastItem : null}
-            >
-              <img onLoad={e => {
-                console.log(e)
-              }} loading="lazy" src={d} alt="" />
-            </div>
-          ))
-        )}
-      </div>
-      {loading && <p style={{ textAlign: "center" }}>Loading ...</p>}
-    </SContainer>
+    <SIsc className="isc" {...{ isReverse }} style={{ ...scrollableStyle }}>
+      <SIscContainer
+        className="isc__container"
+        {...{ isReverse }}
+        style={{ ...containerStyle }}
+      >
+        {renderChildren(refObserver)}
+      </SIscContainer>
+      {hasMore && (loader ?? <p className="isc__loader">Loading ...</p>)}
+    </SIsc>
   );
 }
-const SContainer = styled.div`
-  max-height: 400px;
-  overflow: auto;
-  .container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .item {
-    aspect-ratio: 1;
-    overflow: hidden;
-    & > img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-  }
+
+const SIscReverse = styled.div<{ isReverse: boolean }>`
+  ${({ isReverse }) =>
+    isReverse &&
+    css`
+      display: flex;
+      flex-direction: column-reverse;
+    `}
 `;
+
+const SIsc = styled(SIscReverse)`
+  overflow: auto;
+`;
+
+const SIscContainer = styled(SIscReverse)``;
