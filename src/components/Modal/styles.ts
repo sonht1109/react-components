@@ -15,8 +15,8 @@ export const SModal = styled.div`
     display: block;
   }
 
-  .md {
-    &-overlay {
+  .rc-md {
+    &__overlay {
       background-color: rgba(41, 37, 37, 0.6);
       position: absolute;
       top: 0;
@@ -31,7 +31,7 @@ export const SModal = styled.div`
       }
     }
 
-    &-content {
+    &__content {
       width: 100%;
       height: auto;
       max-height: 100%;
@@ -46,10 +46,10 @@ export const SModal = styled.div`
         opacity: 1;
       }
 
-      .md-content__header {
+      .rc-md__content-header {
         position: relative;
         padding-right: 15px;
-        .md-header__close {
+        .rc-md__header-close {
           position: absolute;
           right: 15px;
           top: 15px;

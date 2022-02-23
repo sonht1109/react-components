@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { SCollapse } from "./styles";
 import { CollapseProps } from "./types";
 
+const prefixCls = "rc-collapse";
+
 export default function Collapse(props: CollapseProps) {
   const { children, isOpen, transition = "0.2s linear" } = props;
 
@@ -20,8 +22,12 @@ export default function Collapse(props: CollapseProps) {
   }, [isOpen, maxHeight]);
 
   return (
-    <SCollapse transition={transition} style={{ maxHeight }}>
-      <div ref={ref} className="collapse__content">
+    <SCollapse
+      className={`${prefixCls}__container`}
+      transition={transition}
+      style={{ maxHeight }}
+    >
+      <div ref={ref} className={`${prefixCls}__content`}>
         {children}
       </div>
     </SCollapse>

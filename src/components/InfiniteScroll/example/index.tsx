@@ -40,7 +40,6 @@ export default function InfiniteScrollComponent() {
 
   return (
     <InfiniteScroll
-      isReverse
       scrollableStyle={{
         maxHeight: 400,
       }}
@@ -51,7 +50,6 @@ export default function InfiniteScrollComponent() {
         Children.toArray(
           data.map((d: any, i: number) => (
             <SItem ref={data.length - i - 1 === 0 ? ref : null}>
-              {/* <img loading="lazy" src={d} alt="" /> */}
               {i}
             </SItem>
           ))

@@ -2,6 +2,8 @@ import React, { useCallback, useRef } from "react";
 import styled, { css } from "styled-components";
 import { InfiniteScrollProps } from "./types";
 
+const prefixCls = "rc-isc";
+
 export default function InfiniteScroll(props: InfiniteScrollProps) {
   const {
     fetchMore,
@@ -32,15 +34,20 @@ export default function InfiniteScroll(props: InfiniteScrollProps) {
   );
 
   return (
-    <SIsc className="isc" {...{ isReverse }} style={{ ...scrollableStyle }}>
+    <SIsc
+      className={`${prefixCls}__scrollable`}
+      {...{ isReverse }}
+      style={{ ...scrollableStyle }}
+    >
       <SIscContainer
-        className="isc__container"
+        className={`${prefixCls}__container`}
         {...{ isReverse }}
         style={{ ...containerStyle }}
       >
         {renderChildren(refObserver)}
       </SIscContainer>
-      {hasMore && (loader ?? <p className="isc__loader">Loading ...</p>)}
+      {hasMore &&
+        (loader ?? <p className={`${prefixCls}__loader`}>Loading ...</p>)}
     </SIsc>
   );
 }

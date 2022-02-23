@@ -3,6 +3,8 @@ import { ModalProps } from "./types";
 import ReactDOM from "react-dom";
 import { useEffect, useRef } from "react";
 
+const prefixCls = "rc-md";
+
 export default function Modal(props: ModalProps) {
   const { children, isOpen, title, toggleModal, renderClose, className } =
     props;
@@ -28,14 +30,17 @@ export default function Modal(props: ModalProps) {
       {isOpen && (
         <>
           <div
-            className="md-overlay"
+            className={`${prefixCls}__overlay`}
             ref={refModalOverlay}
             onClick={toggleModal}
           ></div>
-          <div className="md-content" ref={refModalContent}>
-            <div className="md-content__header">
+          <div className={`${prefixCls}__content`} ref={refModalContent}>
+            <div className={`${prefixCls}__content-header`}>
               {title}
-              <div className="md-header__close" onClick={toggleModal}>
+              <div
+                className={`${prefixCls}__header-close`}
+                onClick={toggleModal}
+              >
                 {renderClose || <CloseBtn />}
               </div>
             </div>
