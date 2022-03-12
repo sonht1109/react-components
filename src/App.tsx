@@ -9,6 +9,7 @@ import Collapse from "components/Collapse";
 import Modal from "components/Modal";
 import useModal from "components/Modal/useModal";
 import InfiniteScrollComponent from "components/InfiniteScroll/example";
+import InputRangeExample from "components/InputRange/example";
 
 function App() {
   const [state, setState] = useState(false);
@@ -136,6 +137,9 @@ function App() {
       </p>
       <p>
         <InfiniteScrollComponent />
+      </p>
+      <p>
+        <InputRangeExample />
       </p>
     </div>
   );

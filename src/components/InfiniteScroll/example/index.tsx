@@ -41,7 +41,7 @@ export default function InfiniteScrollComponent() {
   return (
     <InfiniteScroll
       scrollableStyle={{
-        maxHeight: 400,
+        maxHeight: 150,
       }}
       fetchMore={fetchMore}
       hasMore={true}
