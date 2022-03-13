@@ -8,6 +8,7 @@ export default function InputRangeExample() {
     <>
       <InputRange
         range={{ max: 100, min: 0 }}
+        renderAxisLabel={(val) => val + "px"}
         step={1}
         allowTheSameValues={false}
         value={val}

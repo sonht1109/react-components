@@ -7,7 +7,8 @@ export interface ReactInputRangeProps<T extends Value> {
   onChange?: (val: T) => void;
   step?: number;
   range: Range;
-  renderLabel?: (val: number) => ReactNode;
+  renderAxisLabel?: (val: number) => ReactNode;
+  renderValueLabel?: (val: number) => ReactNode;
   disabled?: boolean;
   allowTheSameValues?: boolean;
 }

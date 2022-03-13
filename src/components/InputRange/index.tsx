@@ -32,7 +32,8 @@ export default function InputRange<T extends Value>(
     onChange,
     value = 0,
     range,
-    renderLabel,
+    renderAxisLabel,
+    renderValueLabel,
     disabled = false,
     step = 1,
     allowTheSameValues = false,
@@ -262,7 +263,7 @@ export default function InputRange<T extends Value>(
     return Children.toArray(
       keys.map((key: keyof Range) => {
         const label =
-          renderLabel?.(convertedValues[key]) || convertedValues[key];
+          renderValueLabel?.(convertedValues[key]) || convertedValues[key];
         return (
           <Slider
             onSliderDrag={onSliderDrag}
@@ -290,7 +291,7 @@ export default function InputRange<T extends Value>(
       ref={refNode}
       {...{ onTouchStart, onMouseDown }}
     >
-      <Label type="min">{renderLabel?.(range.min) || range.min}</Label>
+      <Label type="min">{renderAxisLabel?.(range.min) || range.min}</Label>
       <Track
         percentages={percentages}
         ref={refTrack}
@@ -298,7 +299,7 @@ export default function InputRange<T extends Value>(
       >
         {renderSliders()}
       </Track>
-      <Label type="max">{renderLabel?.(range.max) || range.max}</Label>
+      <Label type="max">{renderAxisLabel?.(range.max) || range.max}</Label>
     </SInputRange>
   );
 }
