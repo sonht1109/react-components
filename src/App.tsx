@@ -136,10 +136,10 @@ function App() {
         </Modal>
       </p>
       <p>
-        <InfiniteScrollComponent />
+        <InputRangeExample />
       </p>
       <p>
-        <InputRangeExample />
+        <InfiniteScrollComponent />
       </p>
     </div>
   );

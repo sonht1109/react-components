@@ -1,15 +1,15 @@
 import { MouseEvent, ReactNode, TouchEvent } from "react";
 
-export interface ReactInputRangeProps {
-  onChangeStart?: (val: Value) => void;
-  onChangeEnd?: (val: Value) => void;
-  onChange?: (val: Value) => void;
-  value?: Value;
+export interface ReactInputRangeProps<T extends Value> {
+  value: T;
+  onChangeStart?: (val: T) => void;
+  onChangeEnd?: (val: T) => void;
+  onChange?: (val: T) => void;
   step?: number;
   range: Range;
-  name?: string;
   renderLabel?: (val: number) => ReactNode;
   disabled?: boolean;
+  draggableTrack?: boolean;
 }
 
 export type Range = { min: number; max: number };
@@ -18,11 +18,14 @@ export type Value = Range | number;
 
 export type Position = {x: number; y: number};
 
+export type LabelType = keyof Range | 'value';
+
 export interface ReactInputRangeLabelProps {
   children: ReactNode;
-  type: 'min' | 'max' | 'value'
+  type: LabelType;
 }
 
 export interface ReactInputRangeTrackProps {
   handleTrackMouseDown: (e: TouchEvent | MouseEvent, pos: Position) => void;
+  percentages: Range;
 }

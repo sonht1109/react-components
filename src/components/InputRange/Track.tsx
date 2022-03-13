@@ -1,42 +1,78 @@
-import React, { MouseEvent, TouchEvent, useRef } from "react";
+import React, {
+  forwardRef,
+  MouseEvent,
+  MutableRefObject,
+  TouchEvent,
+  useRef,
+} from "react";
 import { STrack } from "./styles";
 import { ReactInputRangeTrackProps } from "./types";
 
-export default function Track(props: ReactInputRangeTrackProps) {
-  const { handleTrackMouseDown } = props;
-  const refNode = useRef<HTMLDivElement | null>(null);
+const Track = forwardRef<HTMLDivElement, ReactInputRangeTrackProps>(
+  (props, ref) => {
+    const { handleTrackMouseDown, percentages } = props;
 
-  const handleMouseDown = (e: TouchEvent | MouseEvent) => {
-    let clientX;
-    const domRec = refNode.current?.getBoundingClientRect();
-    
-    if ('touches' in e) {
-      clientX = e.touches[0].clientX;
-    } else {
-      clientX = e.clientX;
-    }
+    const refTrack = useRef<HTMLDivElement | null>(null);
 
-    if (clientX && domRec) {
-      const position = { x: clientX - domRec.left, y: 0 };
-      handleTrackMouseDown(e, position);
-    }
-  };
+    const handleMouseDown = (e: TouchEvent | MouseEvent) => {
+      if (!refTrack.current) return;
 
-  /**
-   *
-   * Handle "mousedown" event
-   */
-  const onMouseDown = (e: MouseEvent) => {
-    handleMouseDown(e);
-  };
+      let clientX;
 
-  /**
-   *
-   * Handle "mousestart" event
-   */
-  const onTouchStart = (e: TouchEvent) => {
-    handleMouseDown(e);
-  };
+      if ("touches" in e) {
+        clientX = e.touches[0].clientX;
+      } else {
+        clientX = e.clientX;
+      }
 
-  return <STrack ref={refNode} {...{ onMouseDown, onTouchStart }}></STrack>;
-}
+      if (clientX) {
+        const position = {
+          x: clientX - refTrack.current.getBoundingClientRect().left,
+          y: 0,
+        };
+        handleTrackMouseDown(e, position);
+      }
+    };
+
+    const widthByPercentage = (percentages.max - percentages.min) * 100 + '%';
+    const leftByPercentage = percentages.min * 100 + '%';
+
+    /**
+     *
+     * Handle "mousedown" event
+     */
+    const onMouseDown = (e: MouseEvent) => {
+      handleMouseDown(e);
+    };
+
+    /**
+     *
+     * Handle "mousestart" event
+     */
+    const onTouchStart = (e: TouchEvent) => {
+      handleMouseDown(e);
+    };
+
+    return (
+      <STrack
+        className="rc-ir__track"
+        ref={(node: HTMLDivElement) => {
+          refTrack.current = node;
+          if (typeof ref === "function") {
+            ref(node);
+          } else if (ref) {
+            (ref as MutableRefObject<HTMLDivElement>).current = node;
+          }
+        }}
+        {...{ onMouseDown, onTouchStart }}
+      >
+        <div
+          className="rc-ir__track--active"
+          style={{ width: widthByPercentage, left: leftByPercentage }}
+        ></div>
+      </STrack>
+    );
+  }
+);
+
+export default Track;

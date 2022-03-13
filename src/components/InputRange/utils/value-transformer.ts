@@ -1,9 +1,10 @@
-import { Position, Range } from "../types";
+import { clamp, isNumber } from ".";
+import { Position, Range, Value } from "../types";
 
 /**
- * Convert a point into a percentage
- * @param position position of mousedown
- * @param clientRect DOMRect of InputRange
+ * Convert a point in Track into a percentage value
+ * @param {Position} position position of mousedown
+ * @param {DOMRect} clientRect DOMRect of InputRange
  * @returns percentage
  */
 export function getPercentageFromPosition(
@@ -15,12 +16,12 @@ export function getPercentageFromPosition(
 
 /**
  * Convert a position into a value on the Track
- * @param pos position of mousedown
- * @param range min and max value of range
- * @param domRect DOMRect of InputRange
+ * @param {Position} pos
+ * @param {Range} range min and max value of range
+ * @param {DOMRect} domRect DOMRect of InputRange
  * @returns value in Track
  */
-export const getValueOnTrackFromMousePosition = (
+export const getValueOnTrackFromPosition = (
   pos: Position,
   range: Range,
   domRect: DOMRect
@@ -32,10 +33,92 @@ export const getValueOnTrackFromMousePosition = (
 
 /**
  * Convert a float value on Track into a round value
- * @param value float value on Track
- * @param step 
+ * @param {number} value float value on Track
+ * @param {number} step
  * @returns round value from step and float value
  */
-export function getRoundValueFromValueOnTrack(value: number, step: number): number {
+export function getRoundedValueFromValueOnTrack(
+  value: number,
+  step: number
+): number {
   return Math.round(value / step) * step;
 }
+
+/**
+ * If a value is single, convert it into object
+ * @param value
+ * @param isMultiValue
+ * @returns value converted into a range
+ */
+export function convertValueIntoRange(value: Value, range: Range): Range {
+  return isMultiValue(value)
+    ? { ...(value as Range) }
+    : { min: range.min, max: value as number };
+}
+
+/**
+ * Convert a value in Track into a percentage value
+ * @param {number} value
+ * @param {Range} range
+ * @returns {number}
+ */
+export const getPercentageFromValue = (value: number, range: Range): number => {
+  const clampValue = clamp(value, range.min, range.max);
+  const valueDiff = range.max - range.min;
+  return (clampValue - range.min) / valueDiff || 0;
+};
+
+/**
+ * Convert a value in Track into a Position on Track
+ * @param value 
+ * @param range 
+ * @param domRect 
+ * @returns 
+ */
+export function getPositionFromValue(
+  value: number,
+  range: Range,
+  domRect: DOMRect
+): Position {
+
+  const valuePercentage = getPercentageFromValue(value, range);
+  const positionValue = valuePercentage * domRect.width;
+
+  return {
+    x: positionValue,
+    y: 0,
+  };
+}
+
+/**
+ * Convert the "mousedown" value in Track into 2 Position (min, max)
+ * @param {Range} valuesPosition
+ * @param {Range} range 
+ * @param {DOMRect} domRect 
+ * @returns 
+ */
+export const getPositionsFromValues = (
+  values: Range,
+  range: Range,
+  domRect: DOMRect
+): { min: Position; max: Position } => {
+  return {
+    min: getPositionFromValue(values.min, range, domRect),
+    max: getPositionFromValue(values.max, range, domRect),
+  };
+};
+
+/**
+ * Convert the current min and max values into percentages
+ * @param {Range} values 
+ * @param {Range} range
+ * @returns {Range} percentages of min and max positions
+ */
+export const getPercentagesFromValues = (values: Range, range: Range): Range => {
+  return {
+    min: getPercentageFromValue(values.min, range),
+    max: getPercentageFromValue(values.max, range)
+  }
+}
+
+export const isMultiValue = (val: Value) => !isNumber(val);

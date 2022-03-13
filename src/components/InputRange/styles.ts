@@ -19,5 +19,12 @@ export const STrack = styled.div`
   left: 0;
   right: 0;
   top: calc(50% - 8px);
-  height: 4px;
+  height: 16px;
+
+  .rc-ir__track--active {
+    height: 100%;
+    border-radius: 4px;
+    background-color: #3f51b5;
+    position: relative;
+  }
 `;

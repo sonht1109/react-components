@@ -1,44 +1,59 @@
 import React, {
   MouseEvent,
-  ReactNode,
   TouchEvent,
   useEffect,
   useRef,
 } from "react";
 import Label from "./Label";
 import { SInputRange } from "./styles";
-import { Position, ReactInputRangeProps, Value } from "./types";
-import { capitalize, isDefined, isObject } from "./utils";
+import {
+  LabelType,
+  Position,
+  Range,
+  ReactInputRangeProps,
+  Value,
+} from "./types";
+import { distanceTo, isDefined } from "./utils";
 import classNames from "classnames";
 import Track from "./Track";
-import { getRoundValueFromValueOnTrack, getValueOnTrackFromMousePosition } from "./utils/value-transformer";
+import {
+  convertValueIntoRange,
+  getPercentagesFromValues,
+  getPositionsFromValues,
+  getRoundedValueFromValueOnTrack,
+  getValueOnTrackFromPosition,
+  isMultiValue,
+} from "./utils/value-transformer";
 
 export const prefixClassName = "rc-ir";
 
-export default function InputRange(props: ReactInputRangeProps) {
+export default function InputRange<T extends Value>(props: ReactInputRangeProps<T>) {
   const {
     onChangeStart,
-    value = 0,
     onChangeEnd,
-    name,
+    onChange,
+    value = 0,
     range,
     renderLabel,
     disabled = false,
     step = 1,
+    draggableTrack = true,
   } = props;
 
   const refStartValue = useRef<Value | null>(null);
   const refNode = useRef<HTMLDivElement>(null);
   const refIsSliderDragging = useRef<boolean>(false);
+  const refTrack = useRef<HTMLDivElement>(null);
+  const refLastKeyMove = useRef<keyof Range | null>(null);
 
-  const isMultiValue = isObject(value);
+  const convertedValues = convertValueIntoRange(value, range);
 
   /**
    *
    * Handle interaction start
    */
   const handleInteractionStart = (e: MouseEvent | TouchEvent) => {
-    onChangeStart?.(value);
+    onChangeStart?.(value as T);
     if (onChangeEnd && !isDefined(refStartValue.current)) {
       refStartValue.current = value;
     }
@@ -55,7 +70,7 @@ export default function InputRange(props: ReactInputRangeProps) {
 
     if (onChangeEnd) {
       if (refStartValue.current !== value) {
-        onChangeEnd(value);
+        onChangeEnd(value as T);
       }
     }
 
@@ -123,32 +138,103 @@ export default function InputRange(props: ReactInputRangeProps) {
   };
 
   /**
+   * Update the position of the slider
+   * @param {string} key position key of "mousedown" point
+   * @param {Position} position min and max positions
+   */
+  const updatePosition = (
+    key: keyof Range,
+    position: Position
+  ): void => {
+    if (refTrack.current) {
+      const positions = getPositionsFromValues(
+        convertedValues,
+        range,
+        refTrack.current.getBoundingClientRect()
+      );
+      positions[key] = position;
+      refLastKeyMove.current = key;
+      updatePositions(positions);
+    }
+  };
+
+  /**
+   * Update min max position
+   * @param {min: Position, max: Position} positions min max positions
+   * @returns
+   */
+  const updatePositions = (positions: {
+    min: Position;
+    max: Position;
+  }): void => {
+    if (!refTrack.current) return;
+    const values = {
+      min: getValueOnTrackFromPosition(positions.min, range, refTrack.current.getBoundingClientRect()),
+      max: getValueOnTrackFromPosition(positions.max, range, refTrack.current.getBoundingClientRect()),
+    };
+
+    const roundedValues = {
+      min: getRoundedValueFromValueOnTrack(values.min, step),
+      max: getRoundedValueFromValueOnTrack(values.max, step),
+    };
+
+    updateValues(roundedValues);
+  };
+
+  /**
+   * Update values
+   * @param values 
+   */
+  const updateValues = (values: Range): void => {
+    onChange?.((isMultiValue(value) ? values : values.max) as T);
+  };
+
+  /**
+   * Return the position key of "mousedown" position: min or max
+   * @param position "mousedown" position
+   * @returns
+   */
+  const getKeyByPosition = (position: Position): keyof Range | null => {
+    if (!refNode.current) return null;
+    const positions = getPositionsFromValues(convertedValues, range, refNode.current.getBoundingClientRect());
+
+    if (isMultiValue(value)) {
+      const distanceToMin = distanceTo(position, positions.min);
+      const distanceToMax = distanceTo(position, positions.max);
+
+      if (distanceToMin < distanceToMax) {
+        return "min";
+      }
+    }
+
+    return "max";
+  };
+
+  /**
    *
    * Handle track "mousedown"
    */
   const handleTrackMouseDown = (e: MouseEvent | TouchEvent, pos: Position) => {
     if (disabled) return;
     e.preventDefault();
-    const domRect = refNode.current?.getBoundingClientRect();
-    if(!domRect) return;
-    const valueOnTrack = getValueOnTrackFromMousePosition(pos, range, domRect);
-    const roundValue = getRoundValueFromValueOnTrack(valueOnTrack, step);
-    console.log(roundValue);
+
+    if (!refNode.current) return;
+
+    const valueOnTrack = getValueOnTrackFromPosition(pos, range, refNode.current.getBoundingClientRect());
+    const roundedValue = getRoundedValueFromValueOnTrack(valueOnTrack, step);
+    const key = getKeyByPosition(pos);
+    if(!key) return;
+    
+    if (
+      !draggableTrack ||
+      roundedValue > range.max ||
+      roundedValue < range.min
+      ) {
+      updatePosition(key, pos);
+    }
   };
 
-  /**
-   * Render hidden input
-   * @returns ReactNode
-   */
-  const renderHiddenInputs = (): ReactNode => {
-    if (!name) return <></>;
-    const values = isMultiValue ? value : { value };
-
-    return Object.entries(values).map(([key, value]: [string, number]) => {
-      const inputName = name + (isMultiValue ? capitalize(key) : "");
-      return <input key={key} name={inputName} value={value} />;
-    });
-  };
+  const percentages = getPercentagesFromValues(convertedValues, range);
 
   useEffect(() => {}, []);
 
@@ -159,9 +245,8 @@ export default function InputRange(props: ReactInputRangeProps) {
       {...{ onTouchStart, onMouseDown }}
     >
       <Label type="min">{renderLabel?.(range.min) || range.min}</Label>
-      <Track handleTrackMouseDown={handleTrackMouseDown} />
+      <Track percentages={percentages} ref={refTrack} handleTrackMouseDown={handleTrackMouseDown} />
       <Label type="min">{renderLabel?.(range.max) || range.max}</Label>
-      {renderHiddenInputs()}
     </SInputRange>
   );
 }
