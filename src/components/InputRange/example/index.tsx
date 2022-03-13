@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import InputRange from "..";
-import { Range } from "../types";
 
 export default function InputRangeExample() {
-  const [val, setVal] = useState<Range>({ min: 20, max: 100 });
+  const [val, setVal] = useState({min: 20, max: 50});
 
   return (
     <>
-      VAL: {val.min} {val.max}
       <InputRange
-      draggableTrack={false}
-        range={{ max: 200, min: 0 }}
+        range={{ max: 100, min: 0 }}
+        step={1}
+        allowTheSameValues={false}
         value={val}
-        onChange={(val: Range) => {
+        onChange={(val) => {
           setVal(val);
         }}
       />

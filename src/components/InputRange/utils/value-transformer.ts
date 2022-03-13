@@ -1,4 +1,5 @@
-import { clamp, isNumber } from ".";
+import { MouseEvent, TouchEvent } from "react";
+import { clamp, isMultiValue } from ".";
 import { Position, Range, Value } from "../types";
 
 /**
@@ -70,17 +71,16 @@ export const getPercentageFromValue = (value: number, range: Range): number => {
 
 /**
  * Convert a value in Track into a Position on Track
- * @param value 
- * @param range 
- * @param domRect 
- * @returns 
+ * @param value
+ * @param range
+ * @param domRect
+ * @returns
  */
 export function getPositionFromValue(
   value: number,
   range: Range,
   domRect: DOMRect
 ): Position {
-
   const valuePercentage = getPercentageFromValue(value, range);
   const positionValue = valuePercentage * domRect.width;
 
@@ -93,9 +93,9 @@ export function getPositionFromValue(
 /**
  * Convert the "mousedown" value in Track into 2 Position (min, max)
  * @param {Range} valuesPosition
- * @param {Range} range 
- * @param {DOMRect} domRect 
- * @returns 
+ * @param {Range} range
+ * @param {DOMRect} domRect
+ * @returns
  */
 export const getPositionsFromValues = (
   values: Range,
@@ -110,15 +110,35 @@ export const getPositionsFromValues = (
 
 /**
  * Convert the current min and max values into percentages
- * @param {Range} values 
+ * @param {Range} values
  * @param {Range} range
  * @returns {Range} percentages of min and max positions
  */
-export const getPercentagesFromValues = (values: Range, range: Range): Range => {
+export const getPercentagesFromValues = (
+  values: Range,
+  range: Range
+): Range => {
   return {
     min: getPercentageFromValue(values.min, range),
-    max: getPercentageFromValue(values.max, range)
-  }
-}
+    max: getPercentageFromValue(values.max, range),
+  };
+};
 
-export const isMultiValue = (val: Value) => !isNumber(val);
+/**
+ * Convert an event into a position
+ * @param {Event} event
+ * @param {DOMRect} domRect
+ * @returns {Position} position
+ */
+export function getPositionFromEvent(event: Event, domRect: DOMRect): Position {
+  const length = domRect.width;
+  const { clientX } =
+    "touches" in event
+      ? (event as unknown as TouchEvent).touches[0]
+      : (event as unknown as MouseEvent);
+
+  return {
+    x: clamp(clientX - domRect.left, 0, length),
+    y: 0,
+  };
+}

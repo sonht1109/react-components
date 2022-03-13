@@ -10,7 +10,7 @@ import { ReactInputRangeTrackProps } from "./types";
 
 const Track = forwardRef<HTMLDivElement, ReactInputRangeTrackProps>(
   (props, ref) => {
-    const { handleTrackMouseDown, percentages } = props;
+    const { handleTrackMouseDown, percentages, children } = props;
 
     const refTrack = useRef<HTMLDivElement | null>(null);
 
@@ -18,7 +18,7 @@ const Track = forwardRef<HTMLDivElement, ReactInputRangeTrackProps>(
       if (!refTrack.current) return;
 
       let clientX;
-
+      
       if ("touches" in e) {
         clientX = e.touches[0].clientX;
       } else {
@@ -34,8 +34,8 @@ const Track = forwardRef<HTMLDivElement, ReactInputRangeTrackProps>(
       }
     };
 
-    const widthByPercentage = (percentages.max - percentages.min) * 100 + '%';
-    const leftByPercentage = percentages.min * 100 + '%';
+    const widthByPercentage = (percentages.max - percentages.min) * 100 + "%";
+    const leftByPercentage = percentages.min * 100 + "%";
 
     /**
      *
@@ -70,6 +70,7 @@ const Track = forwardRef<HTMLDivElement, ReactInputRangeTrackProps>(
           className="rc-ir__track--active"
           style={{ width: widthByPercentage, left: leftByPercentage }}
         ></div>
+        {children}
       </STrack>
     );
   }
