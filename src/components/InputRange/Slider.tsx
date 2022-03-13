@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Label from "./Label";
 import { SSlider } from "./styles";
 import { ReactInputRangeSliderProps } from "./types";
