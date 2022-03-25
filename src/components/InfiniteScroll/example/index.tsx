@@ -1,3 +1,4 @@
+import LazyImage from "components/LazyImage";
 import { Children, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import InfiniteScroll from "..";
@@ -41,7 +42,11 @@ export default function InfiniteScrollComponent() {
   return (
     <InfiniteScroll
       scrollableStyle={{
-        maxHeight: 150,
+        // maxHeight: 300,
+      }}
+      containerStyle={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)'
       }}
       fetchMore={fetchMore}
       hasMore={true}
@@ -50,7 +55,9 @@ export default function InfiniteScrollComponent() {
         Children.toArray(
           data.map((d: any, i: number) => (
             <SItem ref={data.length - i - 1 === 0 ? ref : null}>
-              {i}
+              <div className="item">
+                <LazyImage src={d} placeholderSrc="https://dummyimage.com/600x400/000/fff" />
+              </div>
             </SItem>
           ))
         )
