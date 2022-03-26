@@ -1,43 +1,38 @@
-import React, { ImgHTMLAttributes, useEffect, useRef, useState } from "react";
+import React, { ImgHTMLAttributes, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   placeholderSrc: string;
 }
 
-const isElementInViewport = (el: HTMLImageElement) => {
-  const rect = el.getBoundingClientRect();
-
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.top <= (window.innerHeight || document.documentElement.clientHeight)
-  );
-};
-
 export default function LazyImage(props: Props) {
-  const [loaded, setLoaded] = useState<boolean>(false);
-
   const ref = useRef<HTMLImageElement>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const listener = () => {
-      if (ref.current) {
-        if (!loaded && isElementInViewport(ref.current)) {
-          const imgLoader = new Image();
-          imgLoader.src = props.src || "";
-          imgLoader.onload = () => {
-            ref.current?.setAttribute('src', props.src || '')
-            ref.current?.classList.add("opacity");
-            setLoaded(false);
-          };
-        }
+    if (observer.current) observer.current.disconnect();
+    if (!ref.current) return;
+    const refCurrent = ref.current;
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const imgLoader = new Image();
+        imgLoader.src = props.src || "";
+        imgLoader.onload = () => {
+          refCurrent?.setAttribute("src", props.src || "");
+          refCurrent?.classList.add("opacity");
+        };
+        imgLoader.onerror = () => {
+          refCurrent?.setAttribute("src", props.placeholderSrc || "");
+          refCurrent?.classList.add("opacity");
+        };
       }
+    });
+    observer.current.observe(refCurrent);
+
+    return () => {
+      if (refCurrent && observer.current) observer.current.disconnect();
     };
-    listener();
-    window.addEventListener("scroll", listener);
-    return () => window.removeEventListener("scroll", listener);
-  }, [loaded, props.src]);
+  }, [props.src, props.placeholderSrc]);
 
   return <SImg ref={ref} alt="" {...props} src={props.placeholderSrc} />;
 }

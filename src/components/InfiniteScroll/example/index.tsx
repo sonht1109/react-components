@@ -42,7 +42,7 @@ export default function InfiniteScrollComponent() {
   return (
     <InfiniteScroll
       scrollableStyle={{
-        // maxHeight: 300,
+        maxHeight: 300,
       }}
       containerStyle={{
         display: 'grid',
