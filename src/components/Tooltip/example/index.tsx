@@ -16,6 +16,12 @@ export default function TooltipExample() {
       <Tooltip label="Bottom label" placement="bottom">
         <button>Bottom</button>
       </Tooltip>
+      <Tooltip label="Delay label" delay={200}>
+        <button>Delay by 200ms</button>
+      </Tooltip>
+      <Tooltip label="Disabled label" disabled>
+        <button>Disabled</button>
+      </Tooltip>
     </div>
   );
 }

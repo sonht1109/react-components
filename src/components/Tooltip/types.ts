@@ -14,8 +14,8 @@ export interface TooltipProps {
 export type TooltipPlacement = 'top' | 'left' | 'right' | 'bottom'
 
 export interface TooltipPoint {
-  x: number;
-  y: number;
+  x: number | null;
+  y: number | null;
 }
 
 export interface TooltipRect {

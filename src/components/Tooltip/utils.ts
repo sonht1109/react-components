@@ -27,16 +27,16 @@ export class Position {
  * @returns Point class that includes some methods handling point value
  */
 export class Point {
-  constructor(public x: number = 0, public y: number = 0) {}
+  constructor(public x: number | null = null, public y: number | null = null) {}
   reset(p: TooltipPoint) {
     this.x = p.x;
     this.y = p.y;
   }
   restrictRect(rect: TooltipRect) {
-    if (this.x < rect.l) this.x = rect.l;
-    else if (this.x > rect.r) this.x = rect.r;
-    if (this.y < rect.t) this.y = rect.t;
-    else if (this.y > rect.b) this.y = rect.b;
+    if (this.x && this.x < rect.l) this.x = rect.l;
+    else if (this.x && this.x > rect.r) this.x = rect.r;
+    if (this.y && this.y < rect.t) this.y = rect.t;
+    else if (this.y && this.y > rect.b) this.y = rect.b;
   }
 }
 
@@ -56,7 +56,7 @@ export const getPoint = (
 ): TooltipPoint => {
   let recurCount = 0;
   const point = new Point();
-  const restrictBodyRect: TooltipRect = {
+  const bodyRect: TooltipRect = {
     t: offset,
     l: offset,
     r: document.body.clientWidth - offset - ttRect.width,
@@ -79,14 +79,14 @@ export const getPoint = (
       }
 
       case "left": {
-        point.x = parentRect.left - ttRect.x - offset;
-        point.y = parentRect.top - (parentRect.height - ttRect.height) / 2;
+        point.x = parentRect.left - ttRect.width - offset;
+        point.y = parentRect.top + (parentRect.height - ttRect.height) / 2;
         break;
       }
 
       default: {
         point.x = parentRect.right + offset;
-        point.y = parentRect.top - (parentRect.height - ttRect.height) / 2;
+        point.y = parentRect.top + (parentRect.height - ttRect.height) / 2;
         break;
       }
     }
@@ -94,13 +94,13 @@ export const getPoint = (
     if (recurCount < 3) {
       if (
         (position.isHorizontal() &&
-          (point.x < restrictBodyRect.l || point.x > restrictBodyRect.r)) ||
+          (point.x < bodyRect.l || point.x > bodyRect.r)) ||
         (position.isVertical() &&
-          (point.y < restrictBodyRect.t || point.y > restrictBodyRect.b))
+          (point.y < bodyRect.t || point.y > bodyRect.b))
       ) {
         point.reset(recursive(position.negate()));
       }
-      point.restrictRect(restrictBodyRect);
+      point.restrictRect(bodyRect);
     }
 
     return { x: point.x, y: point.y };

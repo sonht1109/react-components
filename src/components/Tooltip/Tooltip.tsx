@@ -16,7 +16,7 @@ export default function Tooltip(props: TooltipProps) {
 
   const [show, toggle] = useState<boolean>(false);
 
-  const refPoint = useRef<TooltipPoint>({ x: 0, y: 0 });
+  const refPoint = useRef<TooltipPoint>({ x: null, y: null });
   const refTt = useRef<HTMLSpanElement>(null);
 
   const onMouseEnter = (e: Event) => {
