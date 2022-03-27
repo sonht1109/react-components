@@ -1,7 +1,7 @@
-import { SModal } from "./styles";
 import { ModalProps } from "./types";
-import ReactDOM from "react-dom";
-import { useEffect, useRef } from "react";
+import { SModal } from "./styles";
+import useDelayUnmount from "./hooks/useDelayUnmount";
+import { useEffect } from "react";
 
 const prefixCls = "rc-md";
 
@@ -9,48 +9,54 @@ export default function Modal(props: ModalProps) {
   const { children, isOpen, title, toggleModal, renderClose, className } =
     props;
 
-  const refModalParent = useRef<HTMLDivElement>(null);
-  const refModalContent = useRef<HTMLDivElement>(null);
-  const refModalOverlay = useRef<HTMLDivElement>(null);
+  const { shouldRender } = useDelayUnmount(isOpen);
+
+  const overlayAnimation = `${
+    isOpen ? "overlayEnter" : "overlayLeave"
+  } 0.2s ease-out forwards`;
+
+  const modalContentAnimation = `${
+    isOpen ? "modalContentEnter" : "modalContentLeave"
+  } 0.2s ease-out forwards`;
 
   useEffect(() => {
-    if (isOpen) {
-      refModalParent.current?.classList.add("show");
-      setTimeout(() => {
-        refModalContent.current?.classList.add("show");
-        refModalOverlay.current?.classList.add("show");
-      }, 100);
-    } else {
-      refModalParent.current?.classList.remove("show");
-    }
-  }, [isOpen]);
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    const listener = (e: Event) => {
+      if ((e as unknown as KeyboardEvent).key === "Escape" && isOpen) {
+        toggleModal();
+      }
+    };
+    document?.addEventListener("keydown", listener);
 
-  return ReactDOM.createPortal(
-    <SModal {...{ className }} ref={refModalParent}>
-      {isOpen && (
-        <>
-          <div
-            className={`${prefixCls}__overlay`}
-            ref={refModalOverlay}
-            onClick={toggleModal}
-          ></div>
-          <div className={`${prefixCls}__content`} ref={refModalContent}>
-            <div className={`${prefixCls}__content-header`}>
-              {title}
-              <div
-                className={`${prefixCls}__header-close`}
-                onClick={toggleModal}
-              >
-                {renderClose || <CloseBtn />}
-              </div>
-            </div>
+    return () => {
+      document.body.style.overflow = "auto";
+      document?.removeEventListener("keydown", listener);
+    };
+  }, [isOpen, toggleModal]);
 
-            <div className="md-content__container">{children}</div>
+  if (!shouldRender) return <></>;
+
+  return (
+    <SModal {...{ className }}>
+      <div
+        className={`${prefixCls}__overlay`}
+        style={{ animation: overlayAnimation }}
+        onClick={toggleModal}
+      ></div>
+      <div
+        className={`${prefixCls}__content`}
+        style={{ animation: modalContentAnimation }}
+      >
+        <div className={`${prefixCls}__content-header`}>
+          {title}
+          <div className={`${prefixCls}__header-close`} onClick={toggleModal}>
+            {renderClose || <CloseBtn />}
           </div>
-        </>
-      )}
-    </SModal>,
-    document.body
+        </div>
+
+        <div className="md-content__container">{children}</div>
+      </div>
+    </SModal>
   );
 }
 

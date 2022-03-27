@@ -29,6 +29,10 @@ export default function InfiniteScroll(props: InfiniteScrollProps) {
         { threshold: 0 }
       );
       if (node) observer.current.observe(node);
+
+      return () => {
+        if (observer.current) observer.current.disconnect();
+      };
     },
     [fetchMore, hasMore]
   );

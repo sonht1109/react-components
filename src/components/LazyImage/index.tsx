@@ -25,6 +25,7 @@ export default function LazyImage(props: Props) {
           refCurrent?.setAttribute("src", props.placeholderSrc || "");
           refCurrent?.classList.add("opacity");
         };
+        observer.current?.disconnect();
       }
     });
     observer.current.observe(refCurrent);

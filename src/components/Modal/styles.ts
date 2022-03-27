@@ -10,10 +10,6 @@ export const SModal = styled.div`
   z-index: 99;
   display: flex;
   flex-direction: column;
-  display: none;
-  &.show {
-    display: block;
-  }
 
   .rc-md {
     &__overlay {
@@ -26,9 +22,6 @@ export const SModal = styled.div`
       z-index: -1;
       transition: 0.2s;
       opacity: 0;
-      &.show {
-        opacity: 1;
-      }
     }
 
     &__content {
@@ -41,10 +34,6 @@ export const SModal = styled.div`
       transform: translate3d(0, -20px, 0);
       opacity: 0;
       transition: 0.2s;
-      &.show {
-        transform: translate3d(0, 0px, 0);
-        opacity: 1;
-      }
 
       .rc-md__content-header {
         position: relative;
@@ -56,6 +45,48 @@ export const SModal = styled.div`
           z-index: 1;
         }
       }
+    }
+  }
+
+  @keyframes overlayEnter {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes overlayLeave {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes modalContentEnter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -20px, 0);
+    }
+    to {
+      transform: translate3d(0, 0px, 0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes modalContentLeave {
+    from {
+      transform: translate3d(0, 0px, 0);
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+      transform: translate3d(0, -20px, 0);
     }
   }
 `;
