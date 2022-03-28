@@ -37,6 +37,7 @@ export default function InputRange<T extends Value>(
     disabled = false,
     step = 1,
     allowTheSameValues = false,
+    draggableTrack = true,
   } = props;
 
   const refStartValue = useRef<Value | null>(null);
@@ -233,13 +234,14 @@ export default function InputRange<T extends Value>(
    * Handle track "mousedown"
    */
   const handleTrackMouseDown = (e: MouseEvent | TouchEvent, pos: Position) => {
-
     if (disabled || !refNode.current) return;
     e.preventDefault();
     const key = getKeyByPosition(pos);
     if (!key) return;
 
-    updatePosition(key, pos);
+    if (!draggableTrack) {
+      updatePosition(key, pos);
+    }
   };
 
   const onSliderDrag = (e: Event, key: keyof Range) => {
@@ -277,6 +279,43 @@ export default function InputRange<T extends Value>(
     );
   };
 
+  /**
+   * Handle track drag
+   */
+
+  const handleTrackDrag = (prevEvent: Event, currentEvent: Event) => {
+    if (!draggableTrack || disabled || refIsSliderDragging.current) return;
+    if (!refTrack.current) return;
+
+    const domRectTrack = refTrack.current.getBoundingClientRect();
+
+    const currentPosition = getPositionFromEvent(currentEvent, domRectTrack);
+    const currentValue = getValueOnTrackFromPosition(
+      currentPosition,
+      range,
+      domRectTrack
+    );
+    const currentRoundedValue = getRoundedValueFromValueOnTrack(
+      currentValue,
+      step
+    );
+
+    const prevPosition = getPositionFromEvent(prevEvent, domRectTrack);
+    const prevalue = getValueOnTrackFromPosition(
+      prevPosition,
+      range,
+      domRectTrack
+    );
+    const prevRoundedValue = getRoundedValueFromValueOnTrack(prevalue, step);
+
+    const offset = currentRoundedValue - prevRoundedValue;
+
+    updateValues({
+      min: convertedValues.min + offset,
+      max: convertedValues.max + offset,
+    });
+  };
+
   useEffect(() => {
     return () => {
       removeMouseUpListener();
@@ -287,14 +326,16 @@ export default function InputRange<T extends Value>(
 
   return (
     <SInputRange
-      className={classNames(`${prefixClassName}__container`, {disabled})}
+      className={classNames(`${prefixClassName}__container`, { disabled })}
       ref={refNode}
       {...{ onTouchStart, onMouseDown }}
     >
       <Label type="min">{renderAxisLabel?.(range.min) || range.min}</Label>
       <Track
+        draggableTrack={draggableTrack}
         percentages={percentages}
         ref={refTrack}
+        handleTrackDrag={handleTrackDrag}
         handleTrackMouseDown={handleTrackMouseDown}
       >
         {renderSliders()}

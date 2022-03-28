@@ -11,6 +11,7 @@ export interface ReactInputRangeProps<T extends Value> {
   renderValueLabel?: (val: number) => ReactNode;
   disabled?: boolean;
   allowTheSameValues?: boolean;
+  draggableTrack?: boolean;
 }
 
 export type Range = { min: number; max: number };
@@ -30,6 +31,8 @@ export interface ReactInputRangeTrackProps {
   handleTrackMouseDown: (e: TouchEvent | MouseEvent, pos: Position) => void;
   percentages: Range;
   children: ReactNode;
+  draggableTrack: boolean;
+  handleTrackDrag?: (prevEvent: Event, currentEvent: Event) => void;
 }
 
 export interface ReactInputRangeSliderProps {

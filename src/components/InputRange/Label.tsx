@@ -1,5 +1,5 @@
 import React from "react";
-import { prefixClassName } from ".";
+import { prefixClassName } from "./InputRange";
 import { SLabel } from "./styles";
 import { ReactInputRangeLabelProps } from "./types";
 

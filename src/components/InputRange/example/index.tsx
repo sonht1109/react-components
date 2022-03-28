@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import InputRange from "..";
+import InputRange from "../";
 
 export default function InputRangeExample() {
-  const [val, setVal] = useState({min: 20, max: 50});
+  const [val, setVal] = useState(20);
 
   return (
     <>
