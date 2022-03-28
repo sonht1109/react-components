@@ -11,6 +11,7 @@ import useModal from "components/Modal/useModal";
 import InfiniteScrollComponent from "components/InfiniteScroll/example";
 import InputRangeExample from "components/InputRange/example";
 import TooltipExample from "components/Tooltip/example";
+import TabExample from "components/Tab/example";
 
 function App() {
   const [state, setState] = useState(false);
@@ -140,10 +141,13 @@ function App() {
         <InputRangeExample />
       </p>
       <p>
-        <InfiniteScrollComponent />
+        <TooltipExample />
       </p>
       <p>
-        <TooltipExample />
+        <TabExample />
+      </p>
+      <p>
+        <InfiniteScrollComponent />
       </p>
     </div>
   );
