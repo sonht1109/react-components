@@ -22,6 +22,9 @@ export default function TooltipExample() {
       <Tooltip label="Disabled label" disabled>
         <button>Disabled</button>
       </Tooltip>
+      <Tooltip label="Custom label" labelRenderer={(label) => <button>{label}</button>}>
+        <button>Custom label</button>
+      </Tooltip>
     </div>
   );
 }

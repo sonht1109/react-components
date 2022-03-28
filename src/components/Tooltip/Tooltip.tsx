@@ -12,6 +12,7 @@ export default function Tooltip(props: TooltipProps) {
     offset = 4,
     placement = "top",
     disabled = false,
+    labelRenderer
   } = props;
 
   const [show, toggle] = useState<boolean>(false);
@@ -49,7 +50,9 @@ export default function Tooltip(props: TooltipProps) {
             ref={refTt}
             {...{ placement, delay, offset, show, ...refPoint.current }}
           >
-            <div className="tool-tip--container">{label}</div>
+            <div className="tool-tip--animation">
+              {labelRenderer?.(label) || <div className="tool-tip--container">{label}</div>}
+            </div>
           </STooltip>,
           document.body
         )}

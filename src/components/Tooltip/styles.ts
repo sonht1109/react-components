@@ -27,12 +27,14 @@ export const STooltip = styled(STooltipBase).attrs((p: TooltipStyleProps) => {
   top: ${({ y }) => y + "px"};
   left: ${({ x }) => x + "px"};
 
-  transform: ${({ transformDirection, transformSpace, show }) =>
-    `${transformDirection}(${show ? 0 : transformSpace}px)`};
-  transition: 0.2s;
-  transition-delay: ${({ delay }) => delay + "ms"};
-  transform-origin: ${({ transformOrigin }) => transformOrigin};
-  opacity: ${({ show }) => (show ? 1 : 0)};
+  .tool-tip--animation {
+    transform: ${({ transformDirection, transformSpace, show }) =>
+      `${transformDirection}(${show ? 0 : transformSpace}px)`};
+    transition: 0.2s;
+    opacity: ${({ show }) => (show ? 1 : 0)};
+    transition-delay: ${({ delay }) => delay + "ms"};
+    transform-origin: ${({ transformOrigin }) => transformOrigin};
+  }
 
   .tool-tip--container {
     padding: 6px 8px;
