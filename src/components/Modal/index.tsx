@@ -1,6 +1,6 @@
 import { ModalProps } from "./types";
 import { SModal } from "./styles";
-import useDelayUnmount from "./hooks/useDelayUnmount";
+import useDelayUnmount from "../../hooks/useDelayUnmount";
 import { useEffect } from "react";
 
 const prefixCls = "rc-md";

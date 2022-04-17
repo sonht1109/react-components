@@ -12,6 +12,7 @@ import InfiniteScrollComponent from "components/InfiniteScroll/example";
 import InputRangeExample from "components/InputRange/example";
 import TooltipExample from "components/Tooltip/example";
 import TabExample from "components/Tab/example";
+import TransitionExample from "components/Transition/example/TransitionExample";
 
 function App() {
   const [state, setState] = useState(false);
@@ -145,6 +146,9 @@ function App() {
       </p>
       <p>
         <TabExample />
+      </p>
+      <p>
+        <TransitionExample />
       </p>
       <p>
         <InfiniteScrollComponent />

@@ -12,7 +12,7 @@ export default function Tooltip(props: TooltipProps) {
     offset = 4,
     placement = "top",
     disabled = false,
-    labelRenderer
+    labelRenderer,
   } = props;
 
   const [show, toggle] = useState<boolean>(false);
@@ -22,9 +22,11 @@ export default function Tooltip(props: TooltipProps) {
 
   const onMouseEnter = (e: Event) => {
     toggle(true);
+    e.target?.addEventListener('mouseleave', onMouseLeave)
+
     if (e.currentTarget && refPoint.current) {
-      const ttRect = refTt.current?.getBoundingClientRect()
-      if(ttRect) {
+      const ttRect = refTt.current?.getBoundingClientRect();
+      if (ttRect) {
         refPoint.current = getPoint(
           (e.currentTarget as HTMLElement).getBoundingClientRect(),
           ttRect,
@@ -37,13 +39,14 @@ export default function Tooltip(props: TooltipProps) {
 
   const onMouseLeave = (e: Event) => {
     toggle(false);
+    e.currentTarget?.removeEventListener('mouseleave', onMouseLeave)
   };
 
   return (
     <>
       {disabled
         ? children
-        : React.cloneElement(children, { onMouseEnter, onMouseLeave })}
+        : React.cloneElement(children, { onMouseEnter })}
       {!disabled &&
         createPortal(
           <STooltip
@@ -51,7 +54,9 @@ export default function Tooltip(props: TooltipProps) {
             {...{ placement, delay, offset, show, ...refPoint.current }}
           >
             <div className="tool-tip--animation">
-              {labelRenderer?.(label) || <div className="tool-tip--container">{label}</div>}
+              {labelRenderer?.(label) || (
+                <div className="tool-tip--container">{label}</div>
+              )}
             </div>
           </STooltip>,
           document.body

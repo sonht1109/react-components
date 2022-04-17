@@ -11,4 +11,5 @@
 #### - Lazy Image
 #### - Tooltip
 #### - Animation Tab
+#### - Transition
 <img src="https://github.com/sonht1109/react-components/blob/master/src/assets/images/preview.jpg" width="100%"/>

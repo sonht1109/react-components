@@ -42,6 +42,6 @@ export const STooltip = styled(STooltipBase).attrs((p: TooltipStyleProps) => {
     font-size: 12px;
     color: white;
     background-color: rgba(0, 0, 0, 0.8);
-    letter-spacing: 1px;
   }
+  
 `;
