@@ -25,7 +25,7 @@ export default function Transition(props: TransitionProps) {
   );
 
   const refAppearStatus = useRef<EnumTransitionState | null>(
-    shouldRender ? ENTERING : null
+    shouldRender ? ENTERED : null
   );
 
   const getTimeouts = () => {
@@ -95,16 +95,20 @@ export default function Transition(props: TransitionProps) {
 
   useEffect(() => {
     if (state === ENTERED) {
+      console.log("ENTERED")
       onEntered?.();
     } else if (state === ENTERING) {
+      console.log("ENTERING")
       onEntering?.();
       onTransitionEnd(getTimeouts().enter as number, () => {
         setState(ENTERED);
         onEntered?.();
       });
     } else if (state === EXITED) {
+      console.log("EXITED")
       onExited?.();
     } else if (state === EXITING) {
+      console.log("EXITING")
       onExiting?.();
       onTransitionEnd(getTimeouts().exit as number, () => {
         setState(EXITED);
