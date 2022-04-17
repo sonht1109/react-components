@@ -7,8 +7,8 @@ export default function Transition(props: TransitionProps) {
   const {
     shouldRender,
     timeout = 0,
-    enterTransition = true,
-    exitTransition = true,
+    entering = true,
+    exiting = true,
     mountOnEnter = true,
     unmountOnExit = true,
     onEnter,
@@ -41,7 +41,7 @@ export default function Transition(props: TransitionProps) {
   };
 
   const performEnter = () => {
-    if (!enterTransition) {
+    if (!entering) {
       setState(ENTERED);
       return;
     }
@@ -50,7 +50,7 @@ export default function Transition(props: TransitionProps) {
   };
 
   const performExit = () => {
-    if (!exitTransition) {
+    if (!exiting) {
       setState(EXITED);
       return;
     }
@@ -68,6 +68,7 @@ export default function Transition(props: TransitionProps) {
         setState(UNMOUNT);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [performEnter, performExit, unmountOnExit, state]
   );
 
@@ -91,30 +92,28 @@ export default function Transition(props: TransitionProps) {
         updateStatus(EXITING);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, shouldRender, updateStatus]);
 
   useEffect(() => {
     if (state === ENTERED) {
-      console.log("ENTERED")
       onEntered?.();
     } else if (state === ENTERING) {
-      console.log("ENTERING")
       onEntering?.();
       onTransitionEnd(getTimeouts().enter as number, () => {
         setState(ENTERED);
         onEntered?.();
       });
     } else if (state === EXITED) {
-      console.log("EXITED")
       onExited?.();
     } else if (state === EXITING) {
-      console.log("EXITING")
       onExiting?.();
       onTransitionEnd(getTimeouts().exit as number, () => {
         setState(EXITED);
         onExited?.();
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, getTimeouts, onEntering, onEntered, onExiting, onExited]);
 
   if (state === UNMOUNT) return null;

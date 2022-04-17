@@ -1,8 +1,8 @@
 export interface TransitionProps {
   shouldRender: boolean;
   timeout?: number | TransitionTimeout;
-  enterTransition?: boolean;
-  exitTransition?: boolean;
+  entering?: boolean;
+  exiting?: boolean;
   mountOnEnter?: boolean;
   unmountOnExit?: boolean;
   onEnter?: () => void;
