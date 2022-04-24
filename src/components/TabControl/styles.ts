@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
-export const STab = styled.div`
+export const STabControl = styled.div`
+  overflow: auto;
   .tab {
     &__control {
       display: flex;
-      overflow: auto;
+      flex-wrap: nowrap;
       position: relative;
-
+      min-width: 500px;
       &__active {
         position: absolute;
         bottom: 0;
@@ -25,4 +26,4 @@ export const STab = styled.div`
       }
     }
   }
-`
+`;

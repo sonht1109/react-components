@@ -11,7 +11,7 @@ import useModal from "components/Modal/useModal";
 import InfiniteScrollComponent from "components/InfiniteScroll/example";
 import InputRangeExample from "components/InputRange/example";
 import TooltipExample from "components/Tooltip/example";
-import TabExample from "components/Tab/example";
+import TabExample from "components/TabControl/example";
 import TransitionExample from "components/Transition/example/TransitionExample";
 
 function App() {
