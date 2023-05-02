@@ -6,13 +6,12 @@ import DatePicker from "components/DatePicker";
 import Skeleton from "components/Skeleton";
 import CountDown from "components/CountDown";
 import Collapse from "components/Collapse";
-import Modal from "components/Modal";
-import useModal from "components/Modal/useModal";
 import InfiniteScrollComponent from "components/InfiniteScroll/example";
 import InputRangeExample from "components/InputRange/example";
 import TooltipExample from "components/Tooltip/example";
 import TabExample from "components/TabControl/example";
 import TransitionExample from "components/Transition/example/TransitionExample";
+import CompoundModal, { useModal } from "components/CompoundModal";
 
 function App() {
   const [state, setState] = useState(false);
@@ -21,7 +20,7 @@ function App() {
 
   const [isCollapseOpen, toggleCollapse] = useState(false);
 
-  const { isOpen, toggleModal } = useModal();
+  const { open, toggle } = useModal();
 
   return (
     <div className="App">
@@ -118,8 +117,8 @@ function App() {
         </Collapse>
       </p>
       <p>
-        <button onClick={toggleModal}>Toggle Modal</button>
-        <Modal {...{ isOpen, toggleModal }} title="Modal">
+        <button onClick={() => toggle()}>Toggle Modal</button>
+        {/* <Modal {...{ isOpen, toggleModal }} title="Modal">
           <span>
             Ad cillum cupidatat ullamco cillum non esse esse dolore deserunt
             cupidatat commodo aliqua in commodo. Ad nisi qui ipsum cupidatat
@@ -136,7 +135,7 @@ function App() {
             labore mollit culpa. Excepteur laboris consequat minim nisi magna et
             adipisicing.
           </span>
-        </Modal>
+        </Modal> */}
       </p>
       <p>
         <InputRangeExample />
@@ -152,6 +151,17 @@ function App() {
       </p>
       <p>
         <InfiniteScrollComponent />
+      </p>
+
+      {open ? "1213123123123" : ""}
+
+      <p>
+        <CompoundModal {...{ open, toggle }}>
+          <CompoundModal.Body>
+            <p>This is compound modal body</p>
+          </CompoundModal.Body>
+          <CompoundModal.Header header="Compound Modal" />
+        </CompoundModal>
       </p>
     </div>
   );
