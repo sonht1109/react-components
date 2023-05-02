@@ -153,8 +153,6 @@ function App() {
         <InfiniteScrollComponent />
       </p>
 
-      {open ? "1213123123123" : ""}
-
       <p>
         <CompoundModal {...{ open, toggle }}>
           <CompoundModal.Body>
