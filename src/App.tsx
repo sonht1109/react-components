@@ -27,7 +27,6 @@ function App() {
     <div className="App">
       <p>
         <Checkbox1
-          label="Checkbox"
           checked={state}
           onClick={() => setState((prev) => !prev)}
         />

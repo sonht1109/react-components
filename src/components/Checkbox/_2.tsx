@@ -48,9 +48,6 @@ const SCheckbox = styled.label<{ size: number; checkboxPathLength: number }>`
     appearance: none;
     -webkit-appearance: none;
     display: none;
-    &:checked {
-      background-color: red;
-    }
     &:checked ~ svg path {
       stroke-dashoffset: ${({ size, checkboxPathLength }) =>
         -1 * (checkboxPathLength + Math.sqrt(Math.pow(size / 4, 2) * 2))};
@@ -63,7 +60,7 @@ const SCheckbox = styled.label<{ size: number; checkboxPathLength: number }>`
   svg {
     overflow: visible;
     path {
-      stroke: black;
+      stroke: #4096ff;
       stroke-width: 2px;
       stroke-linecap: round;
       stroke-linejoin: round;
