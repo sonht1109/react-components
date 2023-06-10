@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Checkbox from "components/Checkbox";
+import Checkbox1 from "components/Checkbox/_1";
 import Pagination from "components/Pagination";
 import Radio from "components/Radio";
 import DatePicker from "components/DatePicker";
@@ -12,6 +12,7 @@ import TooltipExample from "components/Tooltip/example";
 import TabExample from "components/TabControl/example";
 import TransitionExample from "components/Transition/example/TransitionExample";
 import CompoundModal, { useModal } from "components/CompoundModal";
+import Checkbox2 from "components/Checkbox/_2";
 
 function App() {
   const [state, setState] = useState(false);
@@ -25,10 +26,16 @@ function App() {
   return (
     <div className="App">
       <p>
-        <Checkbox
+        <Checkbox1
           label="Checkbox"
           checked={state}
-          onChange={() => setState((prev) => !prev)}
+          onClick={() => setState((prev) => !prev)}
+        />
+      </p>
+      <p>
+        <Checkbox2
+          checked={state}
+          onClick={() => setState((prev) => !prev)}
         />
       </p>
       <p>
