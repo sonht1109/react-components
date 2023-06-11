@@ -52,7 +52,7 @@ const SCheckbox = styled.label<{ size: number; checkboxPathLength: number }>`
       stroke-dashoffset: ${({ size, checkboxPathLength }) =>
         -1 * (checkboxPathLength + Math.sqrt(Math.pow(size / 4, 2) * 2))};
       stroke-dasharray: ${({ size }) =>
-          Math.sqrt(Math.pow(size / 4, 2) * 2) * 3}
+          Math.sqrt(Math.pow(size / 4, 2) * 2) * 2.8}
         9999999999;
     }
   }

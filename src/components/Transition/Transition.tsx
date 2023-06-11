@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { EnumTransitionState, TransitionProps } from ".";
 
-export default function Transition(props: TransitionProps) {
-  const { ENTERED, ENTERING, EXITED, EXITING, UNMOUNT } = EnumTransitionState;
+const { ENTERED, ENTERING, EXITED, EXITING, UNMOUNT } = EnumTransitionState;
 
+export default function Transition(props: TransitionProps) {
   const {
     shouldRender,
     timeout = 0,
@@ -28,7 +28,7 @@ export default function Transition(props: TransitionProps) {
     shouldRender ? ENTERED : null
   );
 
-  const getTimeouts = () => {
+  const getTimeouts = useCallback(() => {
     let exit, enter;
     exit = enter = timeout;
 
@@ -38,38 +38,29 @@ export default function Transition(props: TransitionProps) {
     }
 
     return { exit, enter };
-  };
-
-  const performEnter = () => {
-    if (!entering) {
-      setState(ENTERED);
-      return;
-    }
-    onEnter?.();
-    setState(ENTERING);
-  };
-
-  const performExit = () => {
-    if (!exiting) {
-      setState(EXITED);
-      return;
-    }
-    onExit?.();
-    setState(EXITING);
-  };
+  }, [timeout]);
 
   const updateStatus = useCallback(
     (nextState: EnumTransitionState | null) => {
       if (nextState === ENTERING) {
-        performEnter();
+        if (!entering) {
+          setState(ENTERED);
+          return;
+        }
+        onEnter?.();
+        setState(ENTERING);
       } else if (nextState === EXITING) {
-        performExit();
+        if (!exiting) {
+          setState(EXITED);
+          return;
+        }
+        onExit?.();
+        setState(EXITING);
       } else if (unmountOnExit && state === EXITED) {
         setState(UNMOUNT);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [performEnter, performExit, unmountOnExit, state]
+    [unmountOnExit, state, entering, onEnter, onExit, exiting]
   );
 
   const onTransitionEnd = (timeout = 0, handler: () => void) => {
@@ -92,7 +83,6 @@ export default function Transition(props: TransitionProps) {
         updateStatus(EXITING);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, shouldRender, updateStatus]);
 
   useEffect(() => {
@@ -113,7 +103,6 @@ export default function Transition(props: TransitionProps) {
         onExited?.();
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, getTimeouts, onEntering, onEntered, onExiting, onExited]);
 
   if (state === UNMOUNT) return null;
