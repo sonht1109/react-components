@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EnumTransitionState, TransitionProps } from ".";
 
-const { ENTERED, ENTERING, EXITED, EXITING, UNMOUNT } = EnumTransitionState;
-
 export default function Transition(props: TransitionProps) {
   const {
     shouldRender,
@@ -21,11 +19,11 @@ export default function Transition(props: TransitionProps) {
   } = props;
 
   const [state, setState] = useState<EnumTransitionState>(
-    !shouldRender && (unmountOnExit || mountOnEnter) ? UNMOUNT : EXITED
+    !shouldRender && (unmountOnExit || mountOnEnter) ? EnumTransitionState.UNMOUNT : EnumTransitionState.EXITED
   );
 
   const refAppearStatus = useRef<EnumTransitionState | null>(
-    shouldRender ? ENTERED : null
+    shouldRender ? EnumTransitionState.ENTERED : null
   );
 
   const getTimeouts = useCallback(() => {
@@ -42,22 +40,22 @@ export default function Transition(props: TransitionProps) {
 
   const updateStatus = useCallback(
     (nextState: EnumTransitionState | null) => {
-      if (nextState === ENTERING) {
+      if (nextState === EnumTransitionState.ENTERING) {
         if (!entering) {
-          setState(ENTERED);
+          setState(EnumTransitionState.ENTERED);
           return;
         }
         onEnter?.();
-        setState(ENTERING);
-      } else if (nextState === EXITING) {
+        setState(EnumTransitionState.ENTERING);
+      } else if (nextState === EnumTransitionState.EXITING) {
         if (!exiting) {
-          setState(EXITED);
+          setState(EnumTransitionState.EXITED);
           return;
         }
         onExit?.();
-        setState(EXITING);
-      } else if (unmountOnExit && state === EXITED) {
-        setState(UNMOUNT);
+        setState(EnumTransitionState.EXITING);
+      } else if (unmountOnExit && state === EnumTransitionState.EXITED) {
+        setState(EnumTransitionState.UNMOUNT);
       }
     },
     [unmountOnExit, state, entering, onEnter, onExit, exiting]
@@ -73,39 +71,39 @@ export default function Transition(props: TransitionProps) {
 
   useEffect(() => {
     if (shouldRender) {
-      if (state === UNMOUNT) {
-        setState(EXITED);
-      } else if (state !== ENTERING && state !== ENTERED) {
-        updateStatus(ENTERING);
+      if (state === EnumTransitionState.UNMOUNT) {
+        setState(EnumTransitionState.EXITED);
+      } else if (state !== EnumTransitionState.ENTERING && state !== EnumTransitionState.ENTERED) {
+        updateStatus(EnumTransitionState.ENTERING);
       }
     } else {
-      if (state === ENTERED || state === ENTERING) {
-        updateStatus(EXITING);
+      if (state === EnumTransitionState.ENTERED || state === EnumTransitionState.ENTERING) {
+        updateStatus(EnumTransitionState.EXITING);
       }
     }
   }, [state, shouldRender, updateStatus]);
 
   useEffect(() => {
-    if (state === ENTERED) {
+    if (state === EnumTransitionState.ENTERED) {
       onEntered?.();
-    } else if (state === ENTERING) {
+    } else if (state === EnumTransitionState.ENTERING) {
       onEntering?.();
       onTransitionEnd(getTimeouts().enter as number, () => {
-        setState(ENTERED);
+        setState(EnumTransitionState.ENTERED);
         onEntered?.();
       });
-    } else if (state === EXITED) {
+    } else if (state === EnumTransitionState.EXITED) {
       onExited?.();
-    } else if (state === EXITING) {
+    } else if (state === EnumTransitionState.EXITING) {
       onExiting?.();
       onTransitionEnd(getTimeouts().exit as number, () => {
-        setState(EXITED);
+        setState(EnumTransitionState.EXITED);
         onExited?.();
       });
     }
   }, [state, getTimeouts, onEntering, onEntered, onExiting, onExited]);
 
-  if (state === UNMOUNT) return null;
+  if (state === EnumTransitionState.UNMOUNT) return null;
 
   return children(state);
 }

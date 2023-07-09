@@ -21,9 +21,9 @@ export interface Props {
 
 export interface CountdownImperativeHandle {}
 
-export type StateTimer = { [key in ETimerElemen]: number | null };
+export type TimerState = { [key in TimerElement]: number | null };
 
-export enum ETimerElemen {
+export enum TimerElement {
   D = "d",
   H = "h",
   M = "m",

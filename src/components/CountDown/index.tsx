@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   DAY_TO_MILISEC,
   HOUR_TO_MILISEC,
   MIN_TO_MILISEC,
   SEC_TO_MILISEC,
 } from "./constants";
-import { CountdownImperativeHandle, Props, StateTimer } from "./types";
+import { Props, TimerState } from "./types";
 import { padTimer } from "./utils";
 
-const CountDown = React.forwardRef<CountdownImperativeHandle, Props>(
+const CountDown = React.forwardRef<{}, Props>(
   (props, ref) => {
     const {
       then,
@@ -21,14 +21,14 @@ const CountDown = React.forwardRef<CountdownImperativeHandle, Props>(
 
     const refInterval = useRef<any>(null);
 
-    const [timer, setTimer] = useState<StateTimer>({
+    const [timer, setTimer] = useState<TimerState>({
       d: null,
       h: null,
       m: null,
       s: null,
     });
 
-    const counting = () => {
+    const counting = useCallback(() => {
       const now = new Date();
       const period = then.getTime() - now.getTime();
       const s = Math.floor(period / SEC_TO_MILISEC) % 60;
@@ -36,18 +36,18 @@ const CountDown = React.forwardRef<CountdownImperativeHandle, Props>(
       const h = Math.floor(period / HOUR_TO_MILISEC) % 24;
       const d = Math.floor(period / DAY_TO_MILISEC);
       if (s >= 0) {
-        setTimer({
-          ...timer,
+        setTimer((prev) => ({
+          ...prev,
           s,
           m,
           h,
           d,
-        });
+        }));
       } else {
         clearInterval(refInterval.current);
-        onFinish && onFinish();
+        onFinish?.();
       }
-    };
+    }, [onFinish, then]);
 
     useEffect(() => {
       if (then) {
@@ -59,8 +59,7 @@ const CountDown = React.forwardRef<CountdownImperativeHandle, Props>(
       }
 
       return () => clearInterval(refInterval.current);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [counting, timer, then]);
 
     if (timer.s === 0) {
       if (renderCompletionist) {

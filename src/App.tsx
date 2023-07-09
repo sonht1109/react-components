@@ -88,7 +88,7 @@ function App() {
       <p>
         <CountDown
           loading={<p>Loading countdown ...</p>}
-          then={new Date(new Date(new Date().getTime() + 60000))}
+          then={new Date(new Date().getTime() + 5000)}
           renderCompletionist={() => <p>FINISH !!!</p>}
           renderer={({ day, hour, min, sec }) => (
             <div>
